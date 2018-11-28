@@ -4,7 +4,7 @@ COPY . /usr/src/myapp
 WORKDIR /usr/src/myapp
 RUN mkdir -p /opt/maven && \
     cd /opt/maven && \
-    curl -fsSL http://apache.claz.org/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz \
+    curl -fsSL http://apache.osuosl.org/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz \
     | tar -xzC /opt/maven --strip-components=1 && \
     ln -s /opt/maven/bin/mvn /usr/bin/mvn
 
