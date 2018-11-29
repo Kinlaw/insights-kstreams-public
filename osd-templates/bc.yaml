@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: builder-kstreams-service
+
+parameters:
+- name: NAMESPACE
+  description: Name of your project (e.g. myproject)
+- name: SOURCE_REPOSITORY_URL
+  description: The URL of the repository with your application source code.
+  displayName: Git repository URI
+  required: true
+  value: git@github.com:RedHatInsights/insights-kstreams.git
+- name: SOURCE_REPOSITORY_REF 
+  description: Git repository branch to check out, if different from default
+  displayName: Git Reference
+- name: SOURCE_REPOSITORY_COMMIT
+  description: Git repository commit to check out, if different from default
+
+objects:
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftWebConsole
+    labels:
+      app: insights-kstreams
+    name: insights-kstreams
+    namespace: ${NAMESPACE}
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: insights-kstreams:latest
+    postCommit: {}
+    resources:
+      limits:
+        cpu: '1'
+        memory: 1Gi
+      requests:
+        cpu: 500m
+        memory: 512Mi
+    runPolicy: Serial
+    source:
+      git:
+        ref: ${SOURCE_REPOSITORY_REF}
+        uri: ${SOURCE_REPOSITORY_URL}
+        commit: ${SOURCE_REPOSITORY_COMMIT}
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: python-36-centos7:latest
+      type: Source
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftWebConsole
+    labels:
+      app: insights-kstreams
+    name: insights-kstreams
+    namespace: ${NAMESPACE}
+  spec:
+    lookupPolicy:
+      local: false

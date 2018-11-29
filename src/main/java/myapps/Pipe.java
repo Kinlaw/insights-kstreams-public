@@ -1,5 +1,6 @@
 package myapps;
  
+import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -20,7 +21,7 @@ public class Pipe {
  
         final StreamsBuilder builder = new StreamsBuilder();
  
-        builder.stream("ckyrouac-test").to("ckyrouac-test-out");
+        builder.globalTable("ckyrouac-test", Materialized.as("ckyrouac-test-global-store"));
  
         final Topology topology = builder.build();
  
