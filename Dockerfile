@@ -13,5 +13,5 @@ ENV MAVEN_HOME /opt/maven
 RUN cd /usr/src/myapp && \
     mvn clean package
 
-CMD ["mvn", "exec:java", "-Dexec.mainClass=myapps.Pipe"]
+CMD ["mvn", "exec:java", "-Dexec.mainClass=myapps.Test"]
 

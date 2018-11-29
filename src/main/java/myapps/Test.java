@@ -1,16 +1,20 @@
 package myapps;
- 
+
+import org.apache.kafka.streams.kstream.Consumed;
+import org.apache.kafka.streams.kstream.Produced;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
+import org.apache.kafka.streams.kstream.GlobalKTable;
+import org.apache.kafka.streams.kstream.KStream;
  
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
  
-public class Pipe {
+public class Test {
  
     public static void main(String[] args) throws Exception {
         Properties props = new Properties();
@@ -20,9 +24,18 @@ public class Pipe {
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
  
         final StreamsBuilder builder = new StreamsBuilder();
- 
-        builder.globalTable("ckyrouac-test", Materialized.as("ckyrouac-test-global-store"));
- 
+
+
+        final KStream<Long, String> ckyrouacTestStream = builder.stream("ckyrouac-test-stream", Consumed.with(Serdes.Long(), Serdes.String()));
+
+        final GlobalKTable<Long, String> ckyrouacTestGlobal =
+                builder.globalTable("ckyrouac-test-global", Materialized.as("ckyrouac-test-global"));
+
+        final KStream<Long, String> joinedStream = ckyrouacTestStream.leftJoin(ckyrouacTestGlobal,
+                                                                        (leftKey, leftValue) -> leftKey + 100,
+                                                                        (leftValue, rightValue) -> "left=" + leftValue + ", right=" + rightValue);
+        joinedStream.to("ckyrouac-test-enriched", Produced.with(Serdes.Long(), Serdes.String()));
+     
         final Topology topology = builder.build();
  
         final KafkaStreams streams = new KafkaStreams(topology, props);
