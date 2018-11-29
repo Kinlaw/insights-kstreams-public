@@ -26,15 +26,15 @@ public class Test {
         final StreamsBuilder builder = new StreamsBuilder();
 
 
-        final KStream<Long, String> ckyrouacTestStream = builder.stream("ckyrouac-test-stream", Consumed.with(Serdes.Long(), Serdes.String()));
+        final KStream<String, String> ckyrouacTestStream = builder.stream("ckyrouac-test-stream", Consumed.with(Serdes.String(), Serdes.String()));
 
-        final GlobalKTable<Long, String> ckyrouacTestGlobal =
+        final GlobalKTable<String, String> ckyrouacTestGlobal =
                 builder.globalTable("ckyrouac-test-global", Materialized.as("ckyrouac-test-global"));
 
-        final KStream<Long, String> joinedStream = ckyrouacTestStream.leftJoin(ckyrouacTestGlobal,
+        final KStream<String, String> joinedStream = ckyrouacTestStream.leftJoin(ckyrouacTestGlobal,
                                                                         (leftKey, leftValue) -> leftKey + 100,
                                                                         (leftValue, rightValue) -> "left=" + leftValue + ", right=" + rightValue);
-        joinedStream.to("ckyrouac-test-enriched", Produced.with(Serdes.Long(), Serdes.String()));
+        joinedStream.to("ckyrouac-test-enriched", Produced.with(Serdes.String(), Serdes.String()));
      
         final Topology topology = builder.build();
  
