@@ -1,5 +1,5 @@
 FROM openjdk:8
-MAINTAINER Chris Kyrouac <ckyrouac@redhat.com>
+MAINTAINER Josh Kinlaw <jkinlaw@redhat.com>
 COPY . /usr/src/myapp
 WORKDIR /usr/src/myapp
 RUN mkdir -p /opt/maven && \
