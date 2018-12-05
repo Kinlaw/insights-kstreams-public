@@ -83,6 +83,19 @@
                         </dependency>
                     </dependencies>
                 </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profile>
+        <id>m2e</id>
+        <activation>
+            <property>
+                <name>m2e.version</name>
+            </property>
+        </activation>
+        <build>
+            <pluginManagement>
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
@@ -121,9 +134,9 @@
                         </lifecycleMappingMetadata>
                     </configuration>
                 </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
+            </pluginManagement>
+        </build>
+    </profile>
 
     <dependencies>
         <!-- Apache Kafka dependencies -->
