@@ -18,7 +18,7 @@ public class Test {
  
     public static void main(String[] args) throws Exception {
         Properties props = new Properties();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "jkinlaw-kstreams-test");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "ckyrouac-kstreams-test");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "platform-mq-ci-kafka-bootstrap.platform-mq-ci.svc:9092");
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
@@ -26,15 +26,15 @@ public class Test {
         final StreamsBuilder builder = new StreamsBuilder();
 
 
-        final KStream<String, String> jkinlawTestStream = builder.stream("jkinlaw-test-stream", Consumed.with(Serdes.String(), Serdes.String()));
+        final KStream<String, String> ckyrouacTestStream = builder.stream("ckyrouac-test-stream", Consumed.with(Serdes.String(), Serdes.String()));
 
-        final GlobalKTable<String, String> jkinlawTestGlobal =
-                builder.globalTable("jkinlaw-test-global", Materialized.as("jkinlaw-test-global"));
+        final GlobalKTable<String, String> ckyrouacTestGlobal =
+                builder.globalTable("ckyrouac-test-global", Materialized.as("ckyrouac-test-global"));
 
-        final KStream<String, String> joinedStream = jkinlawTestStream.leftJoin(jkinlawTestGlobal,
+        final KStream<String, String> joinedStream = ckyrouacTestStream.leftJoin(ckyrouacTestGlobal,
                                                                         (leftKey, leftValue) -> leftKey + 100,
                                                                         (leftValue, rightValue) -> "left=" + leftValue + ", right=" + rightValue);
-        joinedStream.to("jkinlaw-test-enriched", Produced.with(Serdes.String(), Serdes.String()));
+        joinedStream.to("ckyrouac-test-enriched", Produced.with(Serdes.String(), Serdes.String()));
      
         final Topology topology = builder.build();
  
